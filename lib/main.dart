@@ -31,32 +31,32 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final controladorTxtNumero = TextEditingController();
+  var resultado = "";
 
-  void calcular() {
+  String calcular() {
     var texto = controladorTxtNumero.text;
+    var numeroConvertido =
+        int.parse(controladorTxtNumero.text); // pega valor txt
+    int soma = 0;
+    var lista = List<int>.generate(numeroConvertido, (i) => i);
+
     try {
       if (texto == "") {
-        print('Digite um numero!');
-        exit(0);
+        return "Digite um numero!";
       }
-      var numeroConvertido =
-          int.parse(controladorTxtNumero.text); // pega valor txt
       if (numeroConvertido <= 0) {
-        print('Digite um numero maior que 0!');
+        return "Digite um numero maior que 0!";
       } else {
-        int soma = 0;
-        var lista = new List<int>.generate(numeroConvertido, (i) => i);
-
         for (var element in lista) {
           if (element % 3 == 0 || element % 5 == 0) {
             soma += element;
-            print(soma);
           }
         }
       }
     } on Exception catch (_) {
-      print('erro');
+      return "Erro!";
     }
+    return 'Resultado: ' + soma.toString();
   }
 
   @override
@@ -87,11 +87,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                calcular();
+              onPressed: () async {
+                String retorno = await calcular();
+                setState(() {
+                  resultado = retorno;
+                });
               },
               child: const Text('Calcular'),
             ),
+            Text(resultado)
           ],
         ),
       ),
