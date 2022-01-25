@@ -1,5 +1,5 @@
-import 'dart:io';
-
+import 'package:flutter/services.dart';
+import 'Metodo.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Teste 1',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
@@ -32,32 +32,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final controladorTxtNumero = TextEditingController();
   var resultado = "";
-
-  String calcular() {
-    var texto = controladorTxtNumero.text;
-    var numeroConvertido =
-        int.parse(controladorTxtNumero.text); // pega valor txt
-    int soma = 0;
-    var lista = List<int>.generate(numeroConvertido, (i) => i);
-
-    try {
-      if (texto == "") {
-        return "Digite um numero!";
-      }
-      if (numeroConvertido <= 0) {
-        return "Digite um numero maior que 0!";
-      } else {
-        for (var element in lista) {
-          if (element % 3 == 0 || element % 5 == 0) {
-            soma += element;
-          }
-        }
-      }
-    } on Exception catch (_) {
-      return "Erro!";
-    }
-    return 'Resultado: ' + soma.toString();
-  }
+  final calculo = Calcular();
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             const Text(
               'Digite o numero: ',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               width: 200,
@@ -79,7 +55,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: controladorTxtNumero,
-                  decoration: InputDecoration(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -88,14 +68,18 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () async {
-                String retorno = await calcular();
+                String retorno =
+                    await calculo.realizarCalculo(controladorTxtNumero.text);
                 setState(() {
                   resultado = retorno;
                 });
               },
               child: const Text('Calcular'),
             ),
-            Text(resultado)
+            Text(
+              resultado,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            )
           ],
         ),
       ),

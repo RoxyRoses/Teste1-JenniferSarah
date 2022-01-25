@@ -2,36 +2,34 @@
 
 import 'package:flutter/material.dart';
 
-class Calcular extends StatelessWidget {
-  String texto;
-  int numero = 0;
-  int soma = 0;
+class Calcular {
+  Future<String> realizarCalculo(String texto) async {
+    int soma = 0;
 
-  Calcular({required this.texto});
-
-  @override
-  Widget build(BuildContext context) {
     try {
       if (texto == "") {
-        return Text('Digite um numero!');
-      }
-      var numeroConvertido = int.parse(texto); // pega valor txt
-      if (numeroConvertido <= 0) {
-        return Text('Digite um numero maior que 0!');
+        return "Digite um número!";
       } else {
-        int soma = 0;
-        var lista = new List<int>.generate(numeroConvertido, (i) => i);
-
-        for (var element in lista) {
-          if (element % 3 == 0 || element % 5 == 0) {
-            soma += element;
-            return Text('Soma dos valores: ' + soma.toString());
+        var numeroConvertido = int.parse(texto);
+        var lista = List<int>.generate(numeroConvertido, (i) => i);
+        if (numeroConvertido == 0) {
+          return "Digite um número maior que 0!";
+        } else {
+          for (var element in lista) {
+            if (element % 3 == 0 || element % 5 == 0) {
+              soma += element;
+            }
           }
         }
       }
     } on Exception catch (_) {
-      print('erro');
+      return "Erro!";
     }
-    return Text('Erro!');
+    return 'Resultado: ' + soma.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    throw UnimplementedError();
   }
 }
